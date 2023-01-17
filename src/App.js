@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, createElement } from "react";
 
 function App() {
+  const [markup, setMarkup] = useState([]);
+
+  const Element = () => {
+    return [...markup];
+  };
+
+  const handleOnChange = (event) => {
+    if (event.target.value.includes("/p")) {
+      setMarkup((markup) => [
+        ...markup,
+        <input
+          placeholder="jsk"
+          value={event.target.value}
+          onChange={(event) => handleOnChange(event)}
+        />,
+      ]);
+      console.log(markup[0]);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input onChange={(event) => handleOnChange(event)} />
+      {createElement(Element)}
     </div>
   );
 }
