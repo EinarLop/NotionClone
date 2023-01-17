@@ -1,30 +1,49 @@
-import { useState, createElement } from "react";
+import { useState, createElement, useEffect } from "react";
 
 function App() {
-  const [markup, setMarkup] = useState([]);
+  let tagCounter = 1;
 
-  const Element = () => {
-    return [...markup];
-  };
+  const [test, setTest] = useState([
+    {
+      tag: "input",
+      props: {
+        className: "bg-blue-100",
+        onChange: (events) => handleOnChange(events),
+        id: 0,
+      },
+    },
+  ]);
 
-  const handleOnChange = (event) => {
+  const handleOnChange = async (event) => {
     if (event.target.value.includes("/p")) {
-      setMarkup((markup) => [
-        ...markup,
-        <input
-          placeholder="jsk"
-          value={event.target.value}
-          onChange={(event) => handleOnChange(event)}
-        />,
-      ]);
-      console.log(markup[0]);
+      const elementToAdd = {
+        tag: "input",
+        props: {
+          className: "bg-blue-100",
+          onChange: (events) => handleOnChange(events),
+          id: tagCounter,
+        },
+      };
+
+      setTest((test) => [...test, elementToAdd]);
+
+      event.target.value = event.target.value.replace("/p", "");
+      tagCounter++;
     }
   };
 
   return (
     <div>
-      <input onChange={(event) => handleOnChange(event)} />
-      {createElement(Element)}
+      {test.map((element) => {
+        return createElement(
+          element.tag,
+          { ...element.props },
+          element.content
+        );
+      })}
+      <button onClick={() => console.log(test.map((e) => e.props.id))}>
+        nkn
+      </button>
     </div>
   );
 }
